@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>NeonStore Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+
+:root{
+    --bg-dark:#050505;
+    --bg-card:#121212;
+    --primary:#00ff99;
+    --primary-glow:rgba(0,255,153,0.4);
+    --accent:#ff0055;
+    --text-main:#ffffff;
+    --text-sec:#b0b0b0;
+    --notif:#181818;
+    --font-head:'Montserrat',sans-serif;
+    --font-body:'Open Sans',sans-serif;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+    outline:none;
+}
+
+body{
+    background-color:var(--bg-dark);
+    color:var(--text-main);
+    font-family:var(--font-body);
+    overflow-x:hidden;
+    padding-bottom:80px;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(5,5,5,0.95);
+    backdrop-filter:blur(10px);
+    padding:15px 20px;
+    border-bottom:1px solid #222;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.brand-wrapper{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.header-profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.05);
+    padding: 5px 12px 5px 5px;
+    border-radius: 30px;
+    border: 1px solid #333;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.header-profile-btn:hover {
+    border-color: var(--primary);
+    background: rgba(0,255,153,0.05);
+}
+
+.header-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--primary);
+}
+
+.header-username {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.brand{
+    font-size: 1.2rem;
+    font-weight: 700;
+    color:var(--primary);
+    text-shadow:0 0 10px var(--primary-glow);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: var(--text-sec);
+    font-size: 1.1rem;
+}
+
+.header-actions i {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.header-actions i:hover {
+    color: var(--primary);
+}
+
+/* USER MODAL */
+
+#userNameModal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.9);
+    z-index:99999;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+/* BLOCK SCREEN SCREEN OVERLAY */
+#blockUserScreen {
+    position: fixed;
+    inset: 0;
+    background: #000000;
+    z-index: 100000;
+    display: none; /* JS handle karega */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+}
+
+.block-box {
+    width: 100%;
+    max-width: 400px;
+    background: #121212;
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    padding: 30px 20px;
+    box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
+}
+
+.block-box i {
+    color: var(--accent);
+    margin-bottom: 15px;
+}
+
+.block-box h2 {
+    font-family: var(--font-head);
+    color: #fff;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+}
+
+.block-box p {
+    color: var(--text-sec);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.user-box{
+    width:100%;
+    max-width:400px;
+    background:#121212;
+    border:1px solid #333;
+    border-radius:20px;
+    padding:25px;
+    text-align: center;
+}
+
+.user-box h2{
+    color:var(--primary);
+    margin-bottom:15px;
+    font-size:1.3rem;
+}
+
+.user-box p{
+    color:#aaa;
+    margin-bottom:20px;
+    font-size:0.95rem;
+}
+
+/* PROFILE UPLOAD COPTIONS */
+.avatar-upload-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+}
+
+.avatar-preview {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary);
+    background: #222;
+}
+
+.avatar-edit-badge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: var(--primary);
+    color: black;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border: 2px solid #121212;
+    font-size: 0.85rem;
+}
+
+.user-box input[type="text"]{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#1d1d1d;
+    color:white;
+    font-size:1rem;
+    margin-bottom:15px;
+    text-align: left;
+}
+
+.user-box button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:var(--primary);
+    color:black;
+    font-weight:700;
+    cursor:pointer;
+    font-size:1rem;
+}
+
+/* NOTIFICATIONS */
+
+#topNotificationContainer{
+    padding:15px 20px 0;
+}
+
+.top-notification{
+    background:var(--notif);
+    border-left:4px solid var(--primary);
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:12px;
+    animation:fadeIn .4s ease;
+}
+
+.top-notification.info{
+    border-left-color:#00ccff;
+}
+
+.top-notification.success{
+    border-left-color:#00ff99;
+}
+
+.top-notification.warning{
+    border-left-color:#ffcc00;
+}
+
+.top-notification.offer{
+    border-left-color:#ff0055;
+}
+
+.notif-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+}
+
+.notif-title{
+    font-size:1rem;
+    font-weight:700;
+}
+
+.notif-badge{
+    font-size:0.7rem;
+    padding:4px 10px;
+    border-radius:30px;
+    background:#222;
+    color:#aaa;
+    text-transform:uppercase;
+}
+
+.notif-message{
+    color:#ccc;
+    font-size:0.92rem;
+    line-height:1.5;
+}
+
+.notif-time{
+    margin-top:8px;
+    color:#777;
+    font-size:0.75rem;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(-10px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* SEARCH */
+
+.search-container{
+    padding:10px 20px;
+}
+
+.search-box{
+    background:var(--bg-card);
+    border:1px solid #333;
+    border-radius:50px;
+    padding:12px 20px;
+    display:flex;
+    align-items:center;
+}
+
+.search-box input{
+    background:transparent;
+    border:none;
+    color:white;
+    flex:1;
+    font-size:1rem;
+    margin-left:10px;
+}
+
+.search-box i{
+    color:var(--primary);
+}
+
+/* CATEGORY */
+
+.category-scroll{
+    display:flex;
+    overflow-x:auto;
+    padding:10px 20px;
+    gap:10px;
+}
+
+.category-scroll::-webkit-scrollbar{
+    display:none;
+}
+
+.cat-pill{
+    background:#1a1a1a;
+    padding:8px 16px;
+    border-radius:20px;
+    font-size:0.9rem;
+    border:1px solid #333;
+    transition:0.3s;
+    cursor:pointer;
+    white-space:nowrap;
+}
+
+.cat-pill.active{
+    background:var(--primary);
+    color:black;
+    font-weight:700;
+}
+
+/* SECTION */
+
+.section-title{
+    padding:20px 20px 10px;
+    font-size:1.1rem;
+    color:var(--text-sec);
+    text-transform:uppercase;
+    border-left:3px solid var(--accent);
+    margin-left:20px;
+    margin-top:10px;
+}
+
+/* GRID */
+
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:15px;
+    padding:15px 20px;
+}
+
+/* CARD */
+
+.card{
+    background:var(--bg-card);
+    border-radius:15px;
+    overflow:hidden;
+    border:1px solid #222;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+    border-color:var(--primary);
+}
+
+.card-img-wrapper{
+    width:100%;
+    height:170px;
+    position:relative;
+}
+
+.card-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.badge{
+    position:absolute;
+    top:8px;
+    left:8px;
+    padding:4px 8px;
+    border-radius:6px;
+    font-size:0.7rem;
+    font-weight:700;
+}
+
+.badge-free{
+    background:var(--primary);
+    color:black;
+}
+
+.badge-paid{
+    background:var(--accent);
+    color:white;
+}
+
+.card-body{
+    padding:12px;
+}
+
+.card-title{
+    font-size:0.95rem;
+    font-weight:600;
+    margin-bottom:5px;
+}
+
+.card-cat{
+    font-size:0.75rem;
+    color:var(--text-sec);
+    margin-bottom:8px;
+}
+
+.card-price{
+    font-size:1rem;
+    color:var(--primary);
+    font-weight:700;
+}
+
+.download-btn{
+    width:100%;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    padding:10px;
+    font-weight:700;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.download-free{
+    background:var(--primary);
+    color:black;
+}
+
+.download-paid{
+    background:var(--accent);
+    color:white;
+}
+
+/* WHATSAPP */
+
+.fab-wa{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#25D366;
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:30px;
+    color:white;
+    z-index:900;
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    padding:20px;
+}
+
+.modal-content{
+    width:100%;
+    max-width:400px;
+    background:#121212;
+    border-radius:20px;
+    padding:20px;
+    border:1px solid #333;
+}
+
+.modal-title{
+    font-size:1.2rem;
+    color:var(--primary);
+    font-weight:700;
+    margin-bottom:20px;
+}
+
+.pay-box{
+    background:#1a1a1a;
+    border-radius:12px;
+    padding:15px;
+}
+
+.pay-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+}
+
+.modal-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    font-weight:700;
+    margin-top:10px;
+    cursor:pointer;
+}
+
+.btn-pay{
+    background:var(--primary);
+    color:black;
+}
+
+.btn-close{
+    background:#222;
+    color:white;
+}
+
+.loader{
+    text-align:center;
+    padding:40px;
+    color:var(--primary);
+}
+
+.empty{
+    text-align:center;
+    padding:40px;
+    color:#777;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="blockUserScreen">
+    <div class="block-box">
+        <i class="fa-solid fa-circle-xmark fa-4x"></i>
+        <h2>Access Denied!</h2>
+        <p>Your account has been blocked by the Administrator. Please contact support if you think this is a mistake.</p>
+    </div>
+</div>
+
+<div id="userNameModal">
+    <div class="user-box">
+        <h2 id="modalTitle">Welcome User</h2>
+        <p id="modalDesc">Please set up your profile to continue</p>
+        
+        <div class="avatar-upload-container">
+            <img id="avatarPreview" src="https://via.placeholder.com/150?text=User" class="avatar-preview" alt="Avatar">
+            <label for="avatarInput" class="avatar-edit-badge">
+                <i class="fas fa-camera"></i>
+            </label>
+            <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+        </div>
+
+        <input type="text" id="userNameInput" placeholder="Enter your name">
+
+        <button onclick="saveUserName()">
+            Save Profile
+        </button>
+        <button id="modalCloseBtn" onclick="closeUserModal()" style="background:#222; color:white; margin-top:10px; display:none;">
+            Cancel
+        </button>
+    </div>
+</div>
+
+<header>
+    <div class="brand-wrapper">
+        <div class="header-profile-btn" onclick="openEditProfile()">
+            <img id="headerUserAvatar" src="https://via.placeholder.com/150?text=User" class="header-avatar" alt="User">
+            <span id="headerUserName" class="header-username">Guest</span>
+        </div>
+        <div class="brand">
+            <i class="fas fa-bolt"></i> NEONSTORE
+        </div>
+    </div>
+
+    <div class="header-actions">
+        <i class="fas fa-sync-alt" onclick="location.reload()"></i>
+    </div>
+</header>
+
+<div id="topNotificationContainer"></div>
+
+<div class="search-container">
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search products...">
+    </div>
+</div>
+
+<div class="category-scroll" id="catContainer">
+    <div class="cat-pill active">All</div>
+</div>
+
+<div class="section-title">Products</div>
+
+<div class="product-grid" id="mainGrid">
+    <div class="loader">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+    </div>
+</div>
+
+<a href="https://wa.me/9174750027" target="_blank" class="fab-wa">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<div class="modal" id="paymentModal">
+    <div class="modal-content">
+        <div class="modal-title">Complete Payment</div>
+        <div class="pay-box">
+            <div class="pay-row">
+                <span>Product</span>
+                <span id="payProduct"></span>
+            </div>
+            <div class="pay-row">
+                <span>Price</span>
+                <span id="payAmount"></span>
+            </div>
+            <div class="pay-row">
+                <span>UPI ID</span>
+                <span id="payUpi"></span>
+            </div>
+        </div>
+        <button class="modal-btn btn-pay" onclick="payNow()">Pay Now</button>
+        <button class="modal-btn btn-close" onclick="closeModal()">Cancel</button>
+    </div>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, onValue, push, set, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+/* FIREBASE CONFIG */
+const firebaseConfig = {
+    apiKey: "your",
+    authDomain: "your",
+    databaseURL: "your",
+    projectId: "your",
+    storageBucket: "your",
+    messagingSenderId: "your",
+    appId: "your",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let products = [];
+let adminUpi = "";
+let currentPaidProduct = null;
+let base64AvatarData = "";
+
+const RUPEE = String.fromCharCode(8377);
+
+/* USER SYSTEM AND REAL-TIME BLOCK CHECKING */
+const userModal = document.getElementById('userNameModal');
+const blockScreen = document.getElementById('blockUserScreen');
+const avatarInput = document.getElementById('avatarInput');
+const avatarPreview = document.getElementById('avatarPreview');
+
+// Photo upload feature preview logic
+avatarInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        if(file.size > 1024 * 1024) { // 1MB limits to avoid LocalStorage quota error
+            alert("Please choose an image under 1MB.");
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            base64AvatarData = event.target.result;
+            avatarPreview.src = base64AvatarData;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Load Profile Data globally
+function updateHeaderUI(name, imgData) {
+    if(name) document.getElementById('headerUserName').innerText = name;
+    if(imgData) document.getElementById('headerUserAvatar').src = imgData;
+}
+
+const savedUser = localStorage.getItem('neonstore_username');
+let savedUserId = localStorage.getItem('neonstore_userid');
+const savedAvatar = localStorage.getItem('neonstore_avatar');
+
+if(savedUser && savedUserId){
+    userModal.style.display = 'none';
+    if(savedAvatar) base64AvatarData = savedAvatar;
+    updateHeaderUI(savedUser, savedAvatar);
+    startBlockStatusListener(savedUserId);
+}else{
+    userModal.style.display = 'flex';
+}
+
+// Realtime check block status
+function startBlockStatusListener(userId) {
+    onValue(ref(db, 'users/' + userId), (snapshot) => {
+        const userData = snapshot.val();
+        if (userData) {
+            if (userData.isBlock === true) {
+                blockScreen.style.display = 'flex';
+            } else {
+                blockScreen.style.display = 'none';
+            }
+            // Sync current name/avatar from server data if available
+            if(userData.name && userData.name !== localStorage.getItem('neonstore_username')) {
+                localStorage.setItem('neonstore_username', userData.name);
+                updateHeaderUI(userData.name, null);
+            }
+        } else {
+            blockScreen.style.display = 'none';
+        }
+    });
+}
+
+window.saveUserName = async ()=>{
+    const input = document.getElementById('userNameInput');
+    const name = input.value.trim();
+
+    if(!name){
+        alert('Please enter your name');
+        return;
+    }
+
+    let userId = localStorage.getItem('neonstore_userid');
+    
+    if(!userId) {
+        // Naya User Flow
+        const newUserRef = push(ref(db, 'users'));
+        userId = newUserRef.key;
+
+        localStorage.setItem('neonstore_username', name);
+        localStorage.setItem('neonstore_userid', userId);
+        if(base64AvatarData) localStorage.setItem('neonstore_avatar', base64AvatarData);
+
+        await set(newUserRef, {
+            name: name,
+            isBlock: false,
+            time: new Date().toLocaleString(),
+            device: navigator.userAgent,
+            profileImage: base64AvatarData ? "Has Image" : "No Image"
+        });
+        startBlockStatusListener(userId);
+    } else {
+        // Profile Edit Flow
+        localStorage.setItem('neonstore_username', name);
+        if(base64AvatarData) localStorage.setItem('neonstore_avatar', base64AvatarData);
+
+        await update(ref(db, 'users/' + userId), {
+            name: name,
+            profileImage: base64AvatarData ? "Has Image" : "No Image"
+        });
+    }
+
+    updateHeaderUI(name, base64AvatarData);
+    userModal.style.display = 'none';
+};
+
+// Edit Profile Trigger Options
+window.openEditProfile = () => {
+    document.getElementById('modalTitle').innerText = "Update Profile";
+    document.getElementById('modalDesc').innerText = "Change your profile name or picture here";
+    document.getElementById('userNameInput').value = localStorage.getItem('neonstore_username') || "";
+    if(base64AvatarData) {
+        avatarPreview.src = base64AvatarData;
+    }
+    document.getElementById('modalCloseBtn').style.display = 'block';
+    userModal.style.display = 'flex';
+};
+
+window.closeUserModal = () => {
+    userModal.style.display = 'none';
+};
+
+/* SETTINGS */
+onValue(ref(db,'settings'),(snap)=>{
+    const data = snap.val();
+    if(data && data.upi){
+        adminUpi = data.upi;
+    }
+});
+
+/* NOTIFICATIONS */
+onValue(ref(db,'notifications'),(snapshot)=>{
+    const container = document.getElementById('topNotificationContainer');
+    container.innerHTML = '';
+
+    const data = snapshot.val();
+    if(!data) return;
+
+    const notifications = Object.keys(data).map(key=>({
+        id:key,
+        ...data[key]
+    })).reverse();
+
+    notifications.forEach(n=>{
+        const type = n.type || 'info';
+        const title = n.title || 'Notification';
+        const msg = n.message || '';
+        const time = n.time || 'Recently';
+
+        container.innerHTML += `
+            <div class="top-notification ${type}">
+                <div class="notif-head">
+                    <div class="notif-title">${title}</div>
+                    <div class="notif-badge">${type}</div>
+                </div>
+                <div class="notif-message">${msg}</div>
+                <div class="notif-time">${time}</div>
+            </div>
+        `;
+    });
+});
+
+/* PRODUCTS */
+onValue(ref(db,'products'),(snapshot)=>{
+    const data = snapshot.val();
+    products = data
+        ? Object.keys(data).map(key=>({ id:key, ...data[key] })).reverse()
+        : [];
+    renderProducts(products);
+});
+
+/* RENDER PRODUCTS */
+function renderProducts(list){
+    const main = document.getElementById('mainGrid');
+    main.innerHTML='';
+
+    const activeProducts = list.filter(p=>p.isActive);
+
+    if(activeProducts.length===0){
+        main.innerHTML = `<div class="empty">No Products Found</div>`;
+        return;
+    }
+
+    activeProducts.forEach(p => {
+        main.innerHTML += createCard(p);
+    });
+}
+
+/* CARD UI CREATE */
+function createCard(p){
+    const price = p.priceType==='Free' ? 'FREE' : RUPEE + p.price;
+    const badge = p.priceType==='Free' ? 'badge-free' : 'badge-paid';
+    const btnClass = p.priceType==='Free' ? 'download-free' : 'download-paid';
+    const btnText = p.priceType==='Free' ? 'Download' : 'Buy Now';
+
+    return `
+        <div class="card">
+            <div class="card-img-wrapper">
+                <span class="badge ${badge}">${p.priceType}</span>
+                <img src="${p.imageUrl}" class="card-img" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+            </div>
+            <div class="card-body">
+                <div class="card-title">${p.title}</div>
+                <div class="card-cat">${p.category || 'Digital'}</div>
+                <div class="card-price">${price}</div>
+                <button class="download-btn ${btnClass}" onclick="handleDownload('${p.id}')">${btnText}</button>
+            </div>
+        </div>
+    `;
+}
+
+/* SEARCH HANDLER */
+document.getElementById('searchInput').addEventListener('input',(e)=>{
+    const val = e.target.value.toLowerCase();
+    if(val){
+        const filtered = products.filter(p=> p.title.toLowerCase().includes(val) );
+        renderProducts(filtered);
+    }else{
+        renderProducts(products);
+    }
+});
+
+/* DOWNLOAD HANDLER */
+window.handleDownload = (id)=>{
+    const p = products.find(x=>x.id===id);
+    if(!p) return;
+
+    if(p.priceType==='Free'){
+        if(!p.downloadUrl){
+            alert('Download URL Missing');
+            return;
+        }
+        window.open(p.downloadUrl, '_blank');
+        return;
+    }
+
+    currentPaidProduct = p;
+    document.getElementById('paymentModal').style.display='flex';
+    document.getElementById('payProduct').innerText = p.title;
+    document.getElementById('payAmount').innerText = RUPEE + p.price;
+    document.getElementById('payUpi').innerText = adminUpi;
+};
+
+/* CLOSE MODAL */
+window.closeModal = ()=>{
+    document.getElementById('paymentModal').style.display='none';
+};
+
+/* PAY NOW */
+window.payNow = ()=>{
+    if(!currentPaidProduct) return;
+
+    const amount = currentPaidProduct.price;
+    const title = encodeURIComponent(currentPaidProduct.title);
+    const upi = adminUpi;
+
+    const upiLink = `upi://pay?pa=${upi}&pn=NeonStore&am=${amount}&cu=INR&tn=${title}`;
+    window.location.href = upiLink;
+
+    setTimeout(()=>{
+        const ok = confirm('Payment Completed?\n\nPress OK To Download');
+        if(ok){
+            window.open(currentPaidProduct.downloadUrl, '_blank');
+        }
+    },3000);
+};
+
+</script>
+
+</body>
+</html>
